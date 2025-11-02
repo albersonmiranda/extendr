@@ -3,6 +3,7 @@ use syn::{meta::ParseNestedMeta, Lit, LitBool};
 #[derive(Debug, Default)]
 pub(crate) struct ExtendrOptions {
     pub r_name: Option<String>,
+    pub r_class_name: Option<String>,
     pub mod_name: Option<String>,
     pub use_rng: bool,
     pub invisible: Option<bool>,
@@ -36,6 +37,14 @@ impl ExtendrOptions {
                             Ok(())
                         } else {
                             Err(value.error("`r_name` must be a string literal"))
+                        }
+                    }
+                    "r_class_name" => {
+                        if let Ok(Lit::Str(litstr)) = value.parse() {
+                            self.r_class_name = Some(litstr.value());
+                            Ok(())
+                        } else {
+                            Err(value.error("`r_class_name` must be a string literal"))
                         }
                     }
                     "mod_name" => {

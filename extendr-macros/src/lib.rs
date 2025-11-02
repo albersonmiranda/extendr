@@ -59,6 +59,7 @@ mod R;
 mod call;
 mod dataframe;
 mod extendr_conversion;
+mod extendr_struct;
 mod extendr_function;
 mod extendr_impl;
 mod extendr_module;

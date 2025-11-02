@@ -53,15 +53,8 @@ fn do_extendr_type_conversion(item: Item, _opts: &ExtendrOptions) -> syn::Result
             "const params not allowed in #[extendr] impl",
         ));
     }
-    let mut self_ty_name = self_ty.to_string();
-    for gen in generics.type_params() {
-        self_ty_name.push('_');
-        self_ty_name.push_str(gen.ident.to_string().as_str());
-    }
+    let class_name_lit = crate::extendr_struct::r_class_name(&self_ty, &generics, _opts);
 
-    // TODO: Should documenting the struct be moved to R?
-    // At the moment, only documentattion above the impl
-    // block makes it to R.
     let _doc_string = wrappers::get_doc_string(&attrs);
 
     let conversion_impls = quote! {
@@ -119,7 +112,7 @@ fn do_extendr_type_conversion(item: Item, _opts: &ExtendrOptions) -> syn::Result
                 use extendr_api::ExternalPtr;
                 unsafe {
                     let mut res: ExternalPtr<#self_ty> = ExternalPtr::new(value);
-                    res.set_attrib(class_symbol(), #self_ty_name).unwrap();
+                    res.set_attrib(class_symbol(), #class_name_lit).unwrap();
                     res.into()
                 }
             }
